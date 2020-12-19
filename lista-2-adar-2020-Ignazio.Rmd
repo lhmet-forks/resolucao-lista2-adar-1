@@ -108,26 +108,25 @@ set.seed(3)
 (div_anos_100 <- anos %% 100)
 (div_anos_400 <- anos %% 400)
 bissextos <- ifelse(test = (div_anos_400 == 0) & (div_anos_4 == 0) | (div_anos_100 > 0),
-  yes = 1,
-  no = 0
+  yes = "sim",
+  no = "não"
 )
-(as.logical(bissextos))
+bissextos
 
 ```
 
 `r paste("    ")`b. Mostre quais anos são bissextos.
 
 ```{r}
-
-(quais_bissextos <- which(bissextos == 1))
+(bissextos <- which(bissextos == "sim"))
 anos[bissextos]
 ```
 `r paste("    ")`c. Usando o código para verificar se o ano é bissexto, gere um vetor nomeado `ndias` com o número de dias do ano para os anos do item (a).
 
 ```{r}
-
 ndias <- ifelse(
-  test = (div_anos_400 == 0) | (div_anos_4 == 0) & (div_anos_100 > 0),yes = 366,
+  test = (div_anos_400 == 0) & (div_anos_4 == 0) | (div_anos_100 > 0),
+  yes = 366,
   no = 365
 )
 names(ndias) <- anos
@@ -136,7 +135,12 @@ ndias
 `r paste("    ")`d. Programe como obter o total de anos com 366 dias?
 
 ```{r}
-sum(bissextos)
+total_bissextos <- ifelse(
+  test = ndias == 366,
+  yes = 1,
+  no = 0
+)
+sum(total_bissextos)
 ```
 
 
@@ -323,23 +327,22 @@ ggplot(data = dados_long, aes(x = Tempo, y = Temperatura_do_ar, group = Estacao)
 
 a.
 ```{r}
-options(digits = 3)
 tmed_est1 <- mean(tar_est1)
 tmed_est2 <- mean(tar_est2)
-tmed_estcoes <- c(tmed_est1, tmed_est2)
-estacoes <- c("Estação_1", "Estação_2")
-names(tmed_estcoes) <- estacoes
-tmed_estcoes
+(tmed_est1 <- round(tmed_est1, 1))
+(tmed_est2 <- round(tmed_est2, 1))
 ```
+
 b.
 ```{r}
 if (tmed_est1 - tmed_est2 == 0)
-  {print("tmed_est1 == tmed_est2")}
+{print("tmed_est1 = tmed_est2")}
 if(tmed_est1 - tmed_est2 > 0)
-  {print("tmed_est1")} else {
-      print("tmed_est2")
-    }
+{print("tmed_est1")} else {
+  print("tmed_est2")
+}
 ```
+
 c.
 ```{r}
 tar_est1[order(tar_est1, decreasing = TRUE)][3]
@@ -348,8 +351,10 @@ tar_est2[order(tar_est2, decreasing = TRUE)][3]
 
 d.
 ```{r}
-(atd_est1 <- max(tar_est1) - min(tar_est1))
-(atd_est2 <- max(tar_est2) - min(tar_est2))
+atd_est1 <- max(tar_est1) - min(tar_est1)
+(atd_est1 = round(atd_est1, 1))
+atd_est2 <- max(tar_est2) - min(tar_est2)
+(atd_est2 = round(atd_est2, 1))
 ```
 
 e.
@@ -359,34 +364,39 @@ e.
 (hmin_est1 <- c(Hora[which(tar_est1 == min(tar_est1))])) 
 (hmin_est2 <- c(Hora[which(tar_est2 == min(tar_est2))]))
 ```
+
 f.
 ```{r}
-difh_tar <- c(tar_est2 - tar_est1)
-difh_tar[which.max(difh_tar)]
+dif_t <- abs(tar_est2 - tar_est1)
+dif_t[which.max(dif_t)]
 ```
+
 g.
 ```{r}
-(h_difh_tar <- c(Hora[which.max(difh_tar)]))
+(h_dif_t <- c(Hora[which.max(dif_t)]))
 ```
+
 h.
 ```{r}
-(difh_tar1 <- c(diff(tar_est1)))
-(h_ps_tar1 <- c(which.min(difh_tar1)))
-(difh_tar2 <- c(diff(tar_est2)))
-(h_ps_tar2 <- c(which.min(difh_tar2)))
+hps_est1 <- tar_est1[Hora > hmax_est1]
+hps_est1 <- diff(hps_est1)
+(hps_est1 <- names(which.min(hps_est1)))
+hps_est2 <- tar_est2[Hora > hmax_est2]
+hps_est2 <- diff(hps_est2)
+(hps_est2 <- names(which.min(hps_est2)))
 ```
+
 i.
 ```{r}
-(temp_prox <- c(Hora[which((tar_est1 - tar_est2) < 0.5)]))
+(temps_prox <- c(Hora[which(abs(tar_est1 - tar_est2) < 0.5)]))
 ```
-j.
 
+j.
 ```{r}
 (tar_met1 <- (max(tar_est2) + min(tar_est2)) / 2)
-(tar_met2 <- (max(tar_est2) + min(tar_est2) + (tar_est2[10]) + (2 * (tar_est2[22]))) / 5)
-(tar_met2 <- ((tar_est2[8]) + (tar_est2[15]) + (2 * (tar_est2[22]))) / 4)
+(tar_met2 <- (max(tar_est2) + min(tar_est2) + (tar_est2[10]) + (2 * tar_est2[22])) / 5)
+(tar_met3 <- (tar_est2[8] + tar_est2[15] + (2 * tar_est2[22])) / 4)
 ```
-
 
 - - - 
 
@@ -426,43 +436,47 @@ tmed <- (max(tar_est1) + min(tar_est1)) / 2
 a1 <- (max(tar_est1) - min(tar_est1)) / 2
 arg1 <- ifelse(test = (Hora < hmin_est1),
                       yes = arg1 <- pi * ((Hora + 10) / (10 + hmin_est1)),
-                      no = 0
-); arg2 <- ifelse(test = (hmin_est1 <= Hora & Hora < hmax_est1),
+                      no = 0)
+arg2 <- ifelse(test = (hmin_est1 <= Hora & Hora < hmax_est1),
                          yes = arg2 <- pi * ((Hora - hmin_est1) / (14 - hmin_est1)),
                          no = arg1
-); arg3 <- ifelse(test = (Hora > hmax_est1),
+)
+arg3 <- ifelse(test = (Hora > hmax_est1),
                       yes = arg3 <- pi * ((14 - Hora) / (10 + hmin_est1)),
                       no = arg2)
-t_est1 <- ifelse(test =  (hmin_est1 <= Hora & Hora < hmax_est1),
-                      yes = t_est1 <- tmed_est1 - a1 * cos(arg3),
-                      no = t_est1 <- tmed_est1 + a1 * cos(arg3)
+t_calc1 <- ifelse(test =  (hmin_est1 <= Hora & Hora < hmax_est1),
+                      yes = t_calc1 <- tmed_est1 - a1 * cos(arg3),
+                      no = t_calc1 <- tmed_est1 + a1 * cos(arg3)
 )
-t_est1
+t_calc1
 
 tmed <- (max(tar_est2) + min(tar_est2)) / 2
 a2 <- (max(tar_est2) - min(tar_est2)) / 2
 arg1 <- ifelse(test = (Hora < hmin_est2),
                       yes = arg1 <- pi * ((Hora + 10) / (10 + hmin_est2)),
                       no = 0
-); arg2 <- ifelse(test = (hmin_est2 <= Hora & Hora < hmax_est2),
+)
+arg2 <- ifelse(test = (hmin_est2 <= Hora & Hora < hmax_est2),
                          yes = arg2 <- pi * ((Hora - hmin_est2) / (14 - hmin_est2)),
                          no = arg1
-); arg3 <- ifelse(test = (Hora > hmax_est2),
+)
+arg3 <- ifelse(test = (Hora > hmax_est2),
                       yes = arg3 <- pi * ((14 - Hora) / (10 + hmin_est2)),
                       no = arg2)
-t_est2 <- ifelse(test =  (hmin_est2 <= Hora & Hora < hmax_est2),
-                      yes = t_est2 <- tmed - a2 * cos(arg3),
-                      no = t_est2 <- tmed + a2 * cos(arg3)
+t_calc2 <- ifelse(test =  (hmin_est2 <= Hora & Hora < hmax_est2),
+                      yes = t_calc2 <- tmed - a2 * cos(arg3),
+                      no = t_calc2 <- tmed + a2 * cos(arg3)
 )
-t_est2
+t_calc2
 
 
-(RMSE1 <- sqrt(mean((t_est1 - tar_est1)^2)))
-(RMSE2 <- sqrt(mean((t_est2 - tar_est2)^2)))
+RMSE1 <- sqrt(mean((t_calc1 - t_calc1)^2))
+RMSE2 <- sqrt(mean((t_calc2 - t_calc2)^2))
+RMSE1
+RMSE2
 
-
-r1 <- (mean((t_est1 - mean(t_est1)) * (t_est1 - mean(t_est1)))) / sqrt(mean((t_est1 - mean(t_est1)^2) * (t_est1 - mean(t_est1)^2)))
-r2 <- (mean((t_est2 - mean(t_est2)) * (t_est2 - mean(t_est2)))) / sqrt(mean((t_est2 - mean(t_est2)^2) * (t_est2 - mean(t_est2)^2)))
+r1 <- (mean((tar_est1 - mean(tar_est1)) * (t_calc1 - mean(t_calc1)))) / sqrt(mean((tar_est1 - mean(tar_est1)^2) * (t_calc1 - mean(t_calc1)^2)))
+r2 <- (mean((tar_est2 - mean(tar_est2)) * (t_calc2 - mean(t_calc2)))) / sqrt(mean((tar_est2 - mean(tar_est2)^2) * (t_calc2 - mean(t_calc2)^2)))
 r1
 r2
 ```

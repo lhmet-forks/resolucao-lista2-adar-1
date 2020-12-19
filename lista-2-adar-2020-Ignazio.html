@@ -516,29 +516,33 @@ set.seed(3)
 (div_anos_400 &lt;- anos %% 400)
  [1] 294 347 301 392 325  14 393 396 384 297 100 300
 bissextos &lt;- ifelse(test = (div_anos_400 == 0) &amp; (div_anos_4 == 0) | (div_anos_100 &gt; 0),
-  yes = 1,
-  no = 0
+  yes = &quot;sim&quot;,
+  no = &quot;não&quot;
 )
-(as.logical(bissextos))
- [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE</code></pre>
+bissextos
+ [1] &quot;sim&quot; &quot;sim&quot; &quot;sim&quot; &quot;sim&quot; &quot;sim&quot; &quot;sim&quot; &quot;sim&quot; &quot;sim&quot; &quot;sim&quot; &quot;sim&quot; &quot;não&quot; &quot;não&quot;</code></pre>
 <pre><code>b. Mostre quais anos são bissextos.</code></pre>
-<pre class="r"><code>
-(quais_bissextos &lt;- which(bissextos == 1))
+<pre class="r"><code>(bissextos &lt;- which(bissextos == &quot;sim&quot;))
  [1]  1  2  3  4  5  6  7  8  9 10
 anos[bissextos]
- [1] 1894 1894 1894 1894 1894 1894 1894 1894 1894 1894</code></pre>
+ [1] 1894 1947 1901 1992 1925 2014 1993 1996 1984 1897</code></pre>
 <pre><code>c. Usando o código para verificar se o ano é bissexto, gere um vetor nomeado `ndias` com o número de dias do ano para os anos do item (a).</code></pre>
-<pre class="r"><code>
-ndias &lt;- ifelse(
-  test = (div_anos_400 == 0) | (div_anos_4 == 0) &amp; (div_anos_100 &gt; 0),yes = 366,
+<pre class="r"><code>ndias &lt;- ifelse(
+  test = (div_anos_400 == 0) &amp; (div_anos_4 == 0) | (div_anos_100 &gt; 0),
+  yes = 366,
   no = 365
 )
 names(ndias) &lt;- anos
 ndias
 1894 1947 1901 1992 1925 2014 1993 1996 1984 1897 2100 2300 
- 365  365  365  366  365  365  365  366  366  365  365  365 </code></pre>
+ 366  366  366  366  366  366  366  366  366  366  365  365 </code></pre>
 <pre><code>d. Programe como obter o total de anos com 366 dias?</code></pre>
-<pre class="r"><code>sum(bissextos)
+<pre class="r"><code>total_bissextos &lt;- ifelse(
+  test = ndias == 366,
+  yes = 1,
+  no = 0
+)
+sum(total_bissextos)
 [1] 10</code></pre>
 <hr />
 <ol start="6" style="list-style-type: decimal">
@@ -672,39 +676,38 @@ ggplot(data = dados_long, aes(x = Tempo, y = Temperatura_do_ar, group = Estacao)
 <ol style="list-style-type: lower-alpha">
 <li></li>
 </ol>
-<pre class="r"><code>options(digits = 3)
-tmed_est1 &lt;- mean(tar_est1)
+<pre class="r"><code>tmed_est1 &lt;- mean(tar_est1)
 tmed_est2 &lt;- mean(tar_est2)
-tmed_estcoes &lt;- c(tmed_est1, tmed_est2)
-estacoes &lt;- c(&quot;Estação_1&quot;, &quot;Estação_2&quot;)
-names(tmed_estcoes) &lt;- estacoes
-tmed_estcoes
-Estação_1 Estação_2 
-     16.9      16.3 </code></pre>
+(tmed_est1 &lt;- round(tmed_est1, 1))
+[1] 16.9
+(tmed_est2 &lt;- round(tmed_est2, 1))
+[1] 16.3</code></pre>
 <ol start="2" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
 <pre class="r"><code>if (tmed_est1 - tmed_est2 == 0)
-  {print(&quot;tmed_est1 == tmed_est2&quot;)}
+{print(&quot;tmed_est1 = tmed_est2&quot;)}
 if(tmed_est1 - tmed_est2 &gt; 0)
-  {print(&quot;tmed_est1&quot;)} else {
-      print(&quot;tmed_est2&quot;)
-    }
+{print(&quot;tmed_est1&quot;)} else {
+  print(&quot;tmed_est2&quot;)
+}
 [1] &quot;tmed_est1&quot;</code></pre>
 <ol start="3" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
 <pre class="r"><code>tar_est1[order(tar_est1, decreasing = TRUE)][3]
-[1] 20.8
+[1] 20.76
 tar_est2[order(tar_est2, decreasing = TRUE)][3]
-[1] 21.7</code></pre>
+[1] 21.71</code></pre>
 <ol start="4" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
-<pre class="r"><code>(atd_est1 &lt;- max(tar_est1) - min(tar_est1))
-[1] 7.49
-(atd_est2 &lt;- max(tar_est2) - min(tar_est2))
-[1] 9.22</code></pre>
+<pre class="r"><code>atd_est1 &lt;- max(tar_est1) - min(tar_est1)
+(atd_est1 = round(atd_est1, 1))
+[1] 7.5
+atd_est2 &lt;- max(tar_est2) - min(tar_est2)
+(atd_est2 = round(atd_est2, 1))
+[1] 9.2</code></pre>
 <ol start="5" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
@@ -719,41 +722,39 @@ tar_est2[order(tar_est2, decreasing = TRUE)][3]
 <ol start="6" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
-<pre class="r"><code>difh_tar &lt;- c(tar_est2 - tar_est1)
-difh_tar[which.max(difh_tar)]
-[1] 1.49</code></pre>
+<pre class="r"><code>dif_t &lt;- abs(tar_est2 - tar_est1)
+dif_t[which.max(dif_t)]
+[1] 2.38</code></pre>
 <ol start="7" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
-<pre class="r"><code>(h_difh_tar &lt;- c(Hora[which.max(difh_tar)]))
-[1] 11</code></pre>
+<pre class="r"><code>(h_dif_t &lt;- c(Hora[which.max(dif_t)]))
+[1] 19</code></pre>
 <ol start="8" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
-<pre class="r"><code>(difh_tar1 &lt;- c(diff(tar_est1)))
- [1] -0.31 -0.29 -0.25 -0.23 -0.19 -0.09  0.41  1.11  1.42  1.38  1.20  0.94
-[13]  0.64  0.35  0.04 -0.29 -0.71 -1.28 -1.26 -0.84 -0.56 -0.45 -0.39
-(h_ps_tar1 &lt;- c(which.min(difh_tar1)))
-[1] 18
-(difh_tar2 &lt;- c(diff(tar_est2)))
- [1] -0.12 -0.08 -0.06 -0.05 -0.01  0.39  1.02  1.55  1.72  1.71  1.37  0.92
-[13]  0.52  0.02 -0.32 -0.87 -2.07 -2.23 -1.41 -0.79 -0.53 -0.32 -0.21
-(h_ps_tar2 &lt;- c(which.min(difh_tar2)))
-[1] 18</code></pre>
+<pre class="r"><code>hps_est1 &lt;- tar_est1[Hora &gt; hmax_est1]
+hps_est1 &lt;- diff(hps_est1)
+(hps_est1 &lt;- names(which.min(hps_est1)))
+NULL
+hps_est2 &lt;- tar_est2[Hora &gt; hmax_est2]
+hps_est2 &lt;- diff(hps_est2)
+(hps_est2 &lt;- names(which.min(hps_est2)))
+NULL</code></pre>
 <ol style="list-style-type: lower-roman">
 <li></li>
 </ol>
-<pre class="r"><code>(temp_prox &lt;- c(Hora[which((tar_est1 - tar_est2) &lt; 0.5)]))
- [1]  6  7  8  9 10 11 12 13 14 15 16</code></pre>
+<pre class="r"><code>(temps_prox &lt;- c(Hora[which(abs(tar_est1 - tar_est2) &lt; 0.5)]))
+[1]  6  7 16</code></pre>
 <ol start="10" style="list-style-type: lower-alpha">
 <li></li>
 </ol>
 <pre class="r"><code>(tar_met1 &lt;- (max(tar_est2) + min(tar_est2)) / 2)
-[1] 17.4
-(tar_met2 &lt;- (max(tar_est2) + min(tar_est2) + (tar_est2[10]) + (2 * (tar_est2[22]))) / 5)
-[1] 16
-(tar_met2 &lt;- ((tar_est2[8]) + (tar_est2[15]) + (2 * (tar_est2[22]))) / 4)
-[1] 16</code></pre>
+[1] 17.42
+(tar_met2 &lt;- (max(tar_est2) + min(tar_est2) + (tar_est2[10]) + (2 * tar_est2[22])) / 5)
+[1] 15.99
+(tar_met3 &lt;- (tar_est2[8] + tar_est2[15] + (2 * tar_est2[22])) / 4)
+[1] 15.9675</code></pre>
 <hr />
 <ol start="9" style="list-style-type: decimal">
 <li>Calcule a temperatura do ar horária usando o <strong>modelo de onda</strong> para representação do ciclo diário da temperatura do ar, descrito pelas seguintes equações:</li>
@@ -780,53 +781,59 @@ h &gt; h_{T_{max}},  &amp; arg = \pi\left ( \frac{14-h}{10+h_{Tmin}} \right )
 a1 &lt;- (max(tar_est1) - min(tar_est1)) / 2
 arg1 &lt;- ifelse(test = (Hora &lt; hmin_est1),
                       yes = arg1 &lt;- pi * ((Hora + 10) / (10 + hmin_est1)),
-                      no = 0
-); arg2 &lt;- ifelse(test = (hmin_est1 &lt;= Hora &amp; Hora &lt; hmax_est1),
+                      no = 0)
+arg2 &lt;- ifelse(test = (hmin_est1 &lt;= Hora &amp; Hora &lt; hmax_est1),
                          yes = arg2 &lt;- pi * ((Hora - hmin_est1) / (14 - hmin_est1)),
                          no = arg1
-); arg3 &lt;- ifelse(test = (Hora &gt; hmax_est1),
+)
+arg3 &lt;- ifelse(test = (Hora &gt; hmax_est1),
                       yes = arg3 &lt;- pi * ((14 - Hora) / (10 + hmin_est1)),
                       no = arg2)
-t_est1 &lt;- ifelse(test =  (hmin_est1 &lt;= Hora &amp; Hora &lt; hmax_est1),
-                      yes = t_est1 &lt;- tmed_est1 - a1 * cos(arg3),
-                      no = t_est1 &lt;- tmed_est1 + a1 * cos(arg3)
+t_calc1 &lt;- ifelse(test =  (hmin_est1 &lt;= Hora &amp; Hora &lt; hmax_est1),
+                      yes = t_calc1 &lt;- tmed_est1 - a1 * cos(arg3),
+                      no = t_calc1 &lt;- tmed_est1 + a1 * cos(arg3)
 )
-t_est1
- [1] 15.4 14.8 14.2 13.8 13.4 13.2 13.1 13.4 14.2 15.4 16.9 18.3 19.5 20.3 20.6
-[16] 20.6 20.3 20.0 19.5 19.0 18.3 17.6 16.9 16.1
+t_calc1
+ [1] 15.46685 14.81939 14.25189 13.78615 13.44007 13.22696 13.15500 13.44007
+ [9] 14.25189 15.46685 16.90000 18.33315 19.54811 20.35993 20.64500 20.64500
+[17] 20.35993 20.01385 19.54811 18.98061 18.33315 17.63061 16.90000 16.16939
 
 tmed &lt;- (max(tar_est2) + min(tar_est2)) / 2
 a2 &lt;- (max(tar_est2) - min(tar_est2)) / 2
 arg1 &lt;- ifelse(test = (Hora &lt; hmin_est2),
                       yes = arg1 &lt;- pi * ((Hora + 10) / (10 + hmin_est2)),
                       no = 0
-); arg2 &lt;- ifelse(test = (hmin_est2 &lt;= Hora &amp; Hora &lt; hmax_est2),
+)
+arg2 &lt;- ifelse(test = (hmin_est2 &lt;= Hora &amp; Hora &lt; hmax_est2),
                          yes = arg2 &lt;- pi * ((Hora - hmin_est2) / (14 - hmin_est2)),
                          no = arg1
-); arg3 &lt;- ifelse(test = (Hora &gt; hmax_est2),
+)
+arg3 &lt;- ifelse(test = (Hora &gt; hmax_est2),
                       yes = arg3 &lt;- pi * ((14 - Hora) / (10 + hmin_est2)),
                       no = arg2)
-t_est2 &lt;- ifelse(test =  (hmin_est2 &lt;= Hora &amp; Hora &lt; hmax_est2),
-                      yes = t_est2 &lt;- tmed - a2 * cos(arg3),
-                      no = t_est2 &lt;- tmed + a2 * cos(arg3)
+t_calc2 &lt;- ifelse(test =  (hmin_est2 &lt;= Hora &amp; Hora &lt; hmax_est2),
+                      yes = t_calc2 &lt;- tmed - a2 * cos(arg3),
+                      no = t_calc2 &lt;- tmed + a2 * cos(arg3)
 )
-t_est2
- [1] 15.1 14.3 13.7 13.2 12.9 12.8 13.1 13.9 15.1 16.6 18.2 19.7 21.0 21.8 22.0
-[16] 21.9 21.6 21.1 20.5 19.7 18.8 17.9 16.9 16.0
+t_calc2
+ [1] 15.11500 14.33531 13.69043 13.20856 12.91074 12.81000 13.08802 13.88854
+ [9] 15.11500 16.61948 18.22052 19.72500 20.95146 21.75198 22.03000 21.92926
+[17] 21.63144 21.14957 20.50469 19.72500 18.84457 17.90188 16.93812 15.99543
 
 
-(RMSE1 &lt;- sqrt(mean((t_est1 - tar_est1)^2)))
-[1] 0.802
-(RMSE2 &lt;- sqrt(mean((t_est2 - tar_est2)^2)))
-[1] 2.13
+RMSE1 &lt;- sqrt(mean((t_calc1 - t_calc1)^2))
+RMSE2 &lt;- sqrt(mean((t_calc2 - t_calc2)^2))
+RMSE1
+[1] 0
+RMSE2
+[1] 0
 
-
-r1 &lt;- (mean((t_est1 - mean(t_est1)) * (t_est1 - mean(t_est1)))) / sqrt(mean((t_est1 - mean(t_est1)^2) * (t_est1 - mean(t_est1)^2)))
-r2 &lt;- (mean((t_est2 - mean(t_est2)) * (t_est2 - mean(t_est2)))) / sqrt(mean((t_est2 - mean(t_est2)^2) * (t_est2 - mean(t_est2)^2)))
+r1 &lt;- (mean((tar_est1 - mean(tar_est1)) * (t_calc1 - mean(t_calc1)))) / sqrt(mean((tar_est1 - mean(tar_est1)^2) * (t_calc1 - mean(t_calc1)^2)))
+r2 &lt;- (mean((tar_est2 - mean(tar_est2)) * (t_calc2 - mean(t_calc2)))) / sqrt(mean((tar_est2 - mean(tar_est2)^2) * (t_calc2 - mean(t_calc2)^2)))
 r1
-[1] 0.0262
+[1] 0.02465617
 r2
-[1] 0.0371</code></pre>
+[1] 0.03606801</code></pre>
 
 
 
