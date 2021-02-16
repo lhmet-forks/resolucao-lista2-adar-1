@@ -8,14 +8,33 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,
-                      comment = "",
-                      prompt = FALSE, 
-                      collapse = TRUE 
-                      )
-
+knitr::opts_chunk$set(
+  prompt = FALSE,
+  cache = FALSE,
+  fig.path = "images/",
+  comment = "#>",
+  collapse = TRUE
+)
 library(tidyverse)
 ```
+
+## Critérios de Avaliação
+>
+> **Formato padrão de entrega**: só serão avaliadas as listas entregues no [padrão](https://lhmet.github.io/adar-ebook/exerc%C3%ADcios.html) especificado na instrução da referida lista. Entregas fora do padrão implica em nota mínima (zero). O Rmd deve ser baseado no template fornecido.
+>
+> **Identificação**: Arquivo .Rmd sem autoria acarreta uma penalização de 5%. 
+>
+> **Prática de [R Markdown](https://lhmet.github.io/adar-ebook/r-markdown.html)**: A intenção ao solicitar a entrega em R Markdown é de incentivar a prática do R Markdown nas resoluções das questões, incluindo códigos e texto para discutir ou explicar sua solução. A penalização neste critério é até 5% do valor da questão..
+>
+> **Boas práticas**: Os códigos são avaliados quanto as boas práticas recomendadas no [livro](https://lhmet.github.io/adar-ebook/boas-pr%C3%A1ticas-para-c%C3%B3digos-de-boa-qualidade.html). Penalização de até 5% do valor questão.
+>
+> **Erros de digitação e ortografia**: como há recursos para verificação deste tipo de erro (ver [verificação ortográfica no RStudio](https://lhmet.github.io/adar-ebook/verifica%C3%A7%C3%A3o-ortogr%C3%A1fica.html)) eles são penalizados em até 5% do valor questão.
+>
+> **Reprodutibilidade**: o arquivo .Rmd deve rodar sem problemas e gerar o arquivo html com as respostas das questões.
+>
+> **Organização**: a resolução das questões devem ser feitas no espaço reservado para ela, ou seja, logo abaixo do enunciado da referida questão no arquivo .Rmd.
+>
+> **Adequação**: a lista foi concebida para você aplicar o aprendizado do conteúdo referente ao capítulo da lista. Portanto, a melhor solução é a que aplica as funções pertinentes ao conteúdo daquele capítulo e os pacotes recomendados.
 
 
 1. Crie um vetor com os valores de $e^{x}cos{x}$ para os valores de $x = (3, 3.1, 3.2, ..., 6$).
@@ -25,9 +44,16 @@ library(tidyverse)
 x <- c(seq(from = 3, to = 6, by = 0.1))
 
 
-(vetor_func_q1 <- exp(x)*cos(x))
+(vetor_func_q1 <- exp(x)*cos(x)) # sem addin styler 
+(vetor_func_q1 <- exp(x) * cos(x)) # com addin styler (boas práticas!)
 ```
 
+```{r jdt-correcao1, echo = FALSE, comment="JDT>"}
+# penalizacoes
+p1 <- 0.05 # identação
+# nota questão 1
+(nq1 <- 1 - p1)
+```
 
 - - - 
 
@@ -55,19 +81,44 @@ b)
 a3 <- 2:25
 
 (vetor_func_q2b <- c(2, rep((2^a1 / a1), len = 24)))
-
+# código poderia ser bem mais simples
+2^(1:25)/(1:25)
 ```
+
+> \"A simplicidade é o último grau da sofisticação\". Leonardo da Vinci.
+
+```{r jdt-correcao2, echo = FALSE, comment="JDT>"}
+# penalizacoes
+p2 <- 0 
+# nota questão 1
+(nq2 <- 1 - p2)
+```
+
 
 3. Reproduza a criação do vetor dias da semana (`dds`) mostrado abaixo.
 
 ```
 domingo segunda   terca  quarta  quinta   sexta   sabado
       1       2       3       4       5       6        7
+``` 
+
+>JDT faltou fechar o trecho acima com '```' - o que desonfigurou a impressão html.
+
 ```{r}
 #resolução
 (dds <- c(domingo = 1, segunda = 2, terça = 3, quarta = 4, quinta = 5, sexta = 6, sábado = 7))
 ```
 
+> JDT: falta de boas práticas, o código deve ir até 80 caracteres na linha.
+> Use quebra de linha.
+> Não é recomendado usar acentos em códigos.
+
+```{r jdt-correcao3, echo = FALSE, comment="JDT>"}
+# penalizacoes
+p3 <- 0.01 + 0.05 + 0.05
+# nota questão 1
+(nq3 <- 1 - p3)
+```
 
 4. Interprete o resultado da seguinte operação:
 ```
@@ -83,6 +134,16 @@ names(dds)[dds_nums]
 `dds_nums` Usa-se o sufixo `L` em cada elemento do vetor numérico para que a saida seja um vetor do tipo inteiro
 
 `names(dds)[dds_nums]` retorna o nome de cada elemento do vetor numérico/inteiro.
+```
+
+>JDT: Utilize texto para explicar as coisas, não códigos. Chuncks não servem 
+para isso. O aspecto chave era perceber para que serve o conceito de RECICLAGEM.
+
+```{r jdt-correcao4, echo = FALSE, comment="JDT>"}
+# penalizacoes
+p4 <- 0.5
+# nota questão 
+(nq4 <- 1 - p4)
 ```
 
 - - -
@@ -107,13 +168,22 @@ set.seed(3)
 (div_anos_4 <- c(anos %% 4))
 (div_anos_100 <- anos %% 100)
 (div_anos_400 <- anos %% 400)
+# procure imprimir somente o que é pedido na questão
 bissextos <- ifelse(test = (div_anos_400 == 0) & (div_anos_4 == 0) | (div_anos_100 > 0),
   yes = "sim",
   no = "não"
 )
 bissextos
 
+# resposta correta
+# (anos %% 4 == 0) & ((anos %% 100 != 0) | (anos %% 400 == 0))
 ```
+
+> Onde está escrito no enunciado alguma condição de `>`? Seu
+algoritmo está errado. Leia o enunciado, faça tentativas e erros até acertar.
+Você sabe quando um ano é bissexto, então tem que testar seu código com este ano
+até dar a resposta correta.
+
 
 `r paste("    ")`b. Mostre quais anos são bissextos.
 
@@ -121,6 +191,8 @@ bissextos
 (bissextos <- which(bissextos == "sim"))
 anos[bissextos]
 ```
+> JDT: Ignazio, me preocupa não teres percebido vários anos ímpares como sendo bissextos.
+
 `r paste("    ")`c. Usando o código para verificar se o ano é bissexto, gere um vetor nomeado `ndias` com o número de dias do ano para os anos do item (a).
 
 ```{r}
@@ -141,6 +213,30 @@ total_bissextos <- ifelse(
   no = 0
 )
 sum(total_bissextos)
+```
+
+> 10 bissextos? Veja o código abaixo e descubra o que errou. 
+
+
+```{r}
+# Código esperado usando conhecimento do capítulo
+# (a)
+eh_biss <- (anos %% 4 == 0) & ((anos %% 100 != 0) | (anos %% 400 == 0))
+eh_biss
+# (b)
+anos[eh_biss]
+# (c)
+(ndias <- ifelse(eh_biss, 366, 365))
+# (d)
+sum(ndias == 366)
+```
+
+
+```{r jdt-correcao5, echo = FALSE, comment="JDT>"}
+# penalizacoes
+p5 <- 1
+# nota questão 1
+(nq5 <- 1 - p5)
 ```
 
 
@@ -195,6 +291,15 @@ rep(-1:5, times = 2:8)
 rep(c(5, 4, 3, 2, 1, 2, 3, 4, 5), c(5, 4, 3, 2, 1, 2, 3, 4, 4))
 
 ```
+> JDT: na (e) precisa digitar tudo isso? Como você pode codificar uma sequência de n° inteiros em R?
+
+
+```{r}
+# penalizacoes
+p6 <- 0.25* 1/5
+# nota questão 
+(nq6 <- 1 - p6)
+```
 
 - - - 
 
@@ -233,6 +338,9 @@ v0 <- c()
 
 ```
 integer(0)
+```
+
+> Novamente você esqueceu "```" acima o que desconfigurou o html. Você deveria verificar o aspecto de seu html.
 
 ```{r}
 v3 <- c(11, 0.25, 7, 2)
@@ -243,7 +351,12 @@ seq(along = v3)
 seq(along = v2)
 seq(along = v1)
 seq(along = v0)
-
+```
+```{r jdt-correcao7, echo = FALSE, comment="JDT>"}
+# penalizacoes
+p7 <- 0
+# nota questão 
+(nq7 <- 1 - p7)
 ```
 
 - - -
@@ -359,7 +472,7 @@ atd_est2 <- max(tar_est2) - min(tar_est2)
 
 e.
 ```{r}
-(hmax_est1 <- c(Hora[which(tar_est1 == max(tar_est1))]))
+(hmax_est1 <- c(Hora[which(tar_est1 == max(tar_est1))])) # c() desnecessário
 (hmax_est2 <- c(Hora[which(tar_est2 == max(tar_est2))]))
 (hmin_est1 <- c(Hora[which(tar_est1 == min(tar_est1))])) 
 (hmin_est2 <- c(Hora[which(tar_est2 == min(tar_est2))]))
@@ -369,11 +482,38 @@ f.
 ```{r}
 dif_t <- abs(tar_est2 - tar_est1)
 dif_t[which.max(dif_t)]
+
+#max(tar_est2 - tar_est1)
+## ou
+# (inds_tar2_maior <- tar_est2 > tar_est1)
+# max_diff_tar <- max(
+#   tar_est2[inds_tar2_maior] - tar_est1[inds_tar2_maior]
+#   #abs(tar_est2[inds_tar2_maior] - tar_est1[inds_tar2_maior])
+# )
+# max_diff_tar
+
 ```
+
+> Assim como a Andreza, você esqueceu de 'QUANDO A tar_est2 É MAIOR QUE tar_est1 ...'
+
+```{r , echo = FALSE, comment="JDT>"}
+# penalizacoes
+p8 <-   1/10 
+```
+
 
 g.
 ```{r}
 (h_dif_t <- c(Hora[which.max(dif_t)]))
+
+#Hora[which(tar_est2 - tar_est1 == max_diff_tar)]
+Hora[which.max(tar_est2 - tar_est1)]
+```
+
+
+```{r , echo = FALSE, comment="JDT>"}
+# penalizacoes
+p8 <-   1/10 + p8
 ```
 
 h.
@@ -386,6 +526,13 @@ hps_est2 <- diff(hps_est2)
 (hps_est2 <- names(which.min(hps_est2)))
 ```
 
+> Váriáveis resultaram em NULL. Uso da `names()` num vetor sem nomes. 
+
+```{r , echo = FALSE, comment="JDT>"}
+# penalizacoes
+p8 <-   1/10 + p8
+```
+
 i.
 ```{r}
 (temps_prox <- c(Hora[which(abs(tar_est1 - tar_est2) < 0.5)]))
@@ -396,6 +543,14 @@ j.
 (tar_met1 <- (max(tar_est2) + min(tar_est2)) / 2)
 (tar_met2 <- (max(tar_est2) + min(tar_est2) + (tar_est2[10]) + (2 * tar_est2[22])) / 5)
 (tar_met3 <- (tar_est2[8] + tar_est2[15] + (2 * tar_est2[22])) / 4)
+```
+> Você leu o enunciado? Qual é a melhor? Não foi respondido. Código por si só não me diz qual a resposta, pois você mostra 3 opções.
+
+```{r jdt-correcao8, echo = FALSE, comment="JDT>"}
+# penalizacoes
+p8 <- 1/10 + p8
+# nota questão 
+(nq8 <- 1 - p8)
 ```
 
 - - - 
@@ -431,6 +586,9 @@ h > h_{T_{max}},  & arg = \pi\left ( \frac{14-h}{10+h_{Tmin}} \right )
 `r paste("  ")`**c**. Calcule a correlação ($r$) nos dois casos. A barra representa a média aritmética.
 
 $$r = \frac{\sum_{i=1}^{n} (T_{obs}-\bar{T}_{obs})(T_{calc}-\bar{T}_{calc}))}{\sqrt{\sum_{i = 1}^{n} (T_{obs}-\bar{T}_{obs})^{2}(T_{calc}-\bar{T}_{calc})^{2})}}$$
+
+> JDT: organização zero! Se tinha letra a, b, c para que colocar tudo num chunck só? É um chunck por item. Nem dentro do seu único chunck você comentou onde começa uma coisa e termina outra. Se você organizar seus códigos assim nunca se achará. Ficará 2 horas para entender seu próprio código. 
+
 ```{r}
 tmed <- (max(tar_est1) + min(tar_est1)) / 2
 a1 <- (max(tar_est1) - min(tar_est1)) / 2
@@ -448,6 +606,7 @@ t_calc1 <- ifelse(test =  (hmin_est1 <= Hora & Hora < hmax_est1),
                       yes = t_calc1 <- tmed_est1 - a1 * cos(arg3),
                       no = t_calc1 <- tmed_est1 + a1 * cos(arg3)
 )
+
 t_calc1
 
 tmed <- (max(tar_est2) + min(tar_est2)) / 2
@@ -469,15 +628,38 @@ t_calc2 <- ifelse(test =  (hmin_est2 <= Hora & Hora < hmax_est2),
 )
 t_calc2
 
-
+#! ERRO ZERO! NÃO PERCEBEU o problema? Analise seus resultados antes de entregá-los.
 RMSE1 <- sqrt(mean((t_calc1 - t_calc1)^2))
 RMSE2 <- sqrt(mean((t_calc2 - t_calc2)^2))
 RMSE1
 RMSE2
+
 
 r1 <- (mean((tar_est1 - mean(tar_est1)) * (t_calc1 - mean(t_calc1)))) / sqrt(mean((tar_est1 - mean(tar_est1)^2) * (t_calc1 - mean(t_calc1)^2)))
 r2 <- (mean((tar_est2 - mean(tar_est2)) * (t_calc2 - mean(t_calc2)))) / sqrt(mean((tar_est2 - mean(tar_est2)^2) * (t_calc2 - mean(t_calc2)^2)))
 r1
 r2
 ```
+> Você precisa enter a diferença entre somatório $\sum_{i=1}^{n}x_{i}$ (`sum(x)` on R) e média $\frac{1}{n}\sum_{i=1}^{n}x_{i}$ (`mean(x)` on R).
 
+> Corrija seu resultado comparando com o resultado de `cor(tar_obs, tar_calc)`.
+
+
+```{r jdt-correcao9, echo = FALSE, comment="JDT>"}
+# penalizacoes
+p9 <- 1/3 + 1/3 + 0.05
+
+# nota questão 1
+(nq9 <- 1 - p9)
+```
+
+
+
+```{r jdt-nota-final, comment = "JDT>", echo=FALSE}
+# requer conexão de internet
+source("https://gist.githubusercontent.com/lhmet/3ddfc43bcf796c81ecfd9bb93f5f5dc2/raw/b489a6bb4d948472afa5068256b7869a7997e109/aux-funs-list-correction")
+coleta_notas
+# verificação de autoria
+nota <- round((sum(coleta_notas)/length(coleta_notas) * 10), 1)
+message("Nota: ", nota)
+```
